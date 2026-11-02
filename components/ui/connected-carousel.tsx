@@ -138,7 +138,7 @@ export function CalendlyCarousel({
                     <p className="my-3 font-serif text-sm leading-relaxed text-muted sm:text-base">“{item.quote}”</p>
                     <div className="flex items-center justify-center gap-3 lg:justify-start">
                       <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow-sm">
-                        <Image src={item.defaultImage} alt="" fill unoptimized sizes="44px" draggable={false} className="object-cover" />
+                        <Image src={item.defaultImage} alt={`Foto profil ${item.author}`} fill unoptimized sizes="44px" draggable={false} className="object-cover" />
                       </span>
                       <span className="min-w-0 text-left">
                         <span className="block truncate text-sm font-semibold text-ink">{item.author}</span>
@@ -152,7 +152,7 @@ export function CalendlyCarousel({
                 </div>
               ) : (
                 <div className="relative h-full w-full bg-soft">
-                  <Image src={item.defaultImage} alt={item.alt || item.author} fill unoptimized sizes="120px" draggable={false} className="object-cover" />
+                  <Image src={item.defaultImage} alt={item.alt || "Suasana laundry"} fill unoptimized sizes="120px" draggable={false} className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
                   <span className="absolute inset-x-1 bottom-3 truncate text-center text-[10px] font-semibold text-white">{item.author}</span>
                 </div>
