@@ -22,6 +22,8 @@ export interface RailGarment {
   backImage?: string;
   /** Side-on photo shown while the piece rests on the rail; omit to show the front photo turned away. */
   sideImage?: string;
+  /** Override the side-view width used to space this item, as a fraction of its image canvas. */
+  sideWidth?: number;
   /** Short hang-tag text such as a price or a size. */
   tag?: string;
   /** Short facts listed in the detail view. */
@@ -703,7 +705,6 @@ export function ClothingRailHero({
   const sides = React.useRef([] as (HTMLSpanElement | null)[]);
   const drapes = React.useRef([] as (HTMLSpanElement | null)[]);
   const shades = React.useRef([] as (HTMLSpanElement | null)[]);
-  const shadows = React.useRef([] as (HTMLSpanElement | null)[]);
   const tags = React.useRef([] as (HTMLSpanElement | null)[]);
   const sim = React.useRef(emptySim());
   const [size, setSize] = React.useState({ width: 0, h: 300, carousel: false });
@@ -716,7 +717,7 @@ export function ClothingRailHero({
   const returnFocus = React.useRef(null as number | null);
   const pendingOpen = React.useRef(-1);
   const pointer = React.useRef({ id: -1, index: -1, x: 0, y: 0, t: 0, moved: false, kind: "", swipe: 0, lastX: 0, lastT: 0, v: 0 });
-  const sideWidths = React.useMemo(() => items.map((item) => (item.image ? (item.sideImage ? 0.3 : 0.4) : SIDE[item.kind ?? "tee"].width)), [items]);
+  const sideWidths = React.useMemo(() => items.map((item) => item.sideWidth ?? (item.image ? (item.sideImage ? 0.3 : 0.4) : SIDE[item.kind ?? "tee"].width)), [items]);
   const live = React.useRef({ active: null as number | null, size, reduced, count, openIndex: null as number | null, carouselIndex: 0, sideWidths });
   live.current = { ...live.current, active, size, reduced, count, openIndex, sideWidths };
 
@@ -792,8 +793,6 @@ export function ClothingRailHero({
     if (dr) dr.style.setProperty("--drape", `${lag.toFixed(3)}deg`);
     const sh = shades.current[i];
     if (sh) sh.style.setProperty("--shade", (1 - lambert(angle)).toFixed(3));
-    const shadow = shadows.current[i];
-    if (shadow) shadow.style.transform = `translate3d(${(w * 0.05).toFixed(1)}px, ${(h * 0.035).toFixed(1)}px, 0) scaleX(${Math.max(0.12, Math.abs(Math.cos((angle * Math.PI) / 180))).toFixed(3)})`;
     const tag = tags.current[i];
     if (tag) tag.style.transform = `rotate(${(-12 + (s.tag[i] ?? 0)).toFixed(2)}deg)`;
   }, []);
@@ -1125,7 +1124,6 @@ export function ClothingRailHero({
           const color = item.color ?? "var(--color-muted-foreground)";
           const trim = item.trim ?? mix(color, -0.12);
           const turned = active === i;
-          const mask = item.image ? `url("${item.image}")` : silhouetteMask(kind, "front");
           const photoBox = hanger === "none" ? "inset-0" : "inset-x-0 bottom-0 top-[8%]";
           return (
             <button
@@ -1144,9 +1142,6 @@ export function ClothingRailHero({
               onClick={(event) => { const pending = pendingOpen.current; pendingOpen.current = -1; if (event.detail === 0 || pending === i) open(i); }}
             >
               <span ref={(node) => { swings.current[i] = node; }} className="absolute inset-0" style={{ transformOrigin: `50% ${(HOOK_TOP / VB_H) * 100}%` }}>
-                <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ filter: `blur(${Math.max(3, h * 0.022).toFixed(1)}px)` }}>
-                  <span ref={(node) => { shadows.current[i] = node; }} className={`absolute block bg-black opacity-[0.16] dark:opacity-60 ${item.image ? photoBox : "inset-0"}`} style={{ WebkitMask: `${mask} top center / contain no-repeat`, mask: `${mask} top center / contain no-repeat` }} />
-                </span>
                 {(item.sideImage || !item.image) && (
                   <span ref={(node) => { sides.current[i] = node; }} data-face="side" className="absolute inset-0" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(0deg)` }}>
                     <SideHanger uid={uid} material={item.sideImage ? "none" : (item.image ? "none" : hanger)} kind={kind} />
@@ -1465,56 +1460,79 @@ export const CUCI_SATUAN_ITEMS: RailGarment[] = [
     tag: "Rp 7.000",
     description: "Dicuci higienis dengan pelembut dan antibakteri, digantung di bar handuk khusus agar serat tetap mekar & lembut.",
     details: ["100% Katun Terry tebal", "Antibakteri & bebas kuman", "Daya serap tetap terjaga", "Gantungan bar handuk terpasang"],
+    image: "/images/fx/handuk-front.webp",
+    backImage: "/images/fx/handuk-back.webp",
+    sideImage: "/images/fx/handuk-sided.webp",
   },
   {
     id: "selimut-tebal",
     name: "Selimut Tebal / Blanket",
     kind: "blanket",
+    sideWidth: 0.39,
     color: "#C47A5F",
     trim: "#A05E48",
     tag: "Rp 20.000",
     description: "Dicuci bersih hingga serat terdalam dengan deterjen anti-alergi dan dikeringkan bebas lembab di gantungan selimut lebar.",
     details: ["Cuci higienis serat tebal", "Aman untuk kulit sensitif", "Pengeringan suhu optimal", "Gantungan bar selimut kokoh"],
+    image: "/images/fx/selimut-front.webp",
+    backImage: "/images/fx/selimut-back.webp",
+    sideImage: "/images/fx/selimut-sided.webp",
   },
   {
     id: "sprei-kasur",
     name: "Sprei Kasur Set (Sprei + Bantal)",
     kind: "bedsheet",
+    sideWidth: 0.44,
     color: "#7DB8A0",
     trim: "#5A9E80",
     tag: "Rp 15.000",
     description: "Satu set sprei dan sarung bantal disetrika licin rapi, dilipat presisi dan digantung di bar sprei lebar.",
     details: ["Satu set lengkap", "Setrika uap licin rapi", "Pelindung karet elastis sudut", "Aroma segar menenangkan"],
+    image: "/images/fx/sprei-front.webp",
+    backImage: "/images/fx/sprei-back.webp",
+    sideImage: "/images/fx/sprei-sided.webp",
   },
   {
     id: "bed-cover-jumbo",
     name: "Bed Cover Jumbo / King",
     kind: "bedcover",
+    sideWidth: 0.72,
     color: "#3D5A80",
     trim: "#2B4162",
     tag: "Rp 25.000",
     description: "Pencucian deep wash untuk bed cover besar, dakron tetap merata tidak menggumpal, dibungkus plastik pelindung.",
     details: ["Dakron tidak menggumpal", "Pencucian mesin kapasitas besar", "Sterilisasi uap panas", "Kemasan vakum tebal"],
+    image: "/images/fx/bedcover-front.webp",
+    backImage: "/images/fx/bedcover-back.webp",
+    sideImage: "/images/fx/bedcover-sided.webp",
   },
   {
     id: "bantal-tidur",
     name: "Bantal Tidur / Pillow",
     kind: "pillow",
+    sideWidth: 0.39,
     color: "#F5F0E8",
     trim: "#DCD4C8",
     tag: "Rp 12.000",
     description: "Cuci bantal menyeluruh hingga ke isian dakron, bebas tungau & debu, kembali empuk seperti baru.",
     details: ["Deep wash isian dakron", "Anti tungau & bebas debu", "Pengeringan mesin 360°", "Kemasan plastik vakum"],
+    image: "/images/fx/bantal-front.webp",
+    backImage: "/images/fx/bantal-back.webp",
+    sideImage: "/images/fx/bantal-sided.webp",
   },
   {
     id: "gordyn-vitrase",
     name: "Gordyn / Vitrase / Curtain",
     kind: "curtain",
+    sideWidth: 0.39,
     color: "#D4C9B8",
     trim: "#B8A99A",
     tag: "Rp 18.000",
     description: "Pencucian khusus gordyn panjang, aman untuk kain tipis transparan maupun blackout tebal, tanpa merusak lipatan.",
     details: ["Aman kain tipis & blackout", "Tanpa merusak lipatan", "Pewangi lembut tahan lama", "Setrika uap presisi"],
+    image: "/images/fx/gorden-front.webp",
+    backImage: "/images/fx/gorden-back.webp",
+    sideImage: "/images/fx/gorden-sided.webp",
   },
 ];
 
