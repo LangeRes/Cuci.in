@@ -1,5 +1,4 @@
 import type { OrderTracking } from "@/types";
-import { statusTestOrders } from "@/lib/mock-data/status-orders";
 
 const ORDERS_STORAGE_KEY = "laundryku.orders";
 
@@ -22,7 +21,6 @@ export function saveLocalOrder(order: Omit<OrderTracking, "code">): OrderTrackin
   const existing = getLocalOrders();
   const reservedCodes = new Set([
     ...existing.map((item) => item.code.toUpperCase()),
-    ...statusTestOrders.map((item) => item.code.toUpperCase()),
   ]);
 
   let code = "";

@@ -3,7 +3,7 @@ import { Mail, MapPin, Phone, Shirt } from "lucide-react";
 export function Footer() {
   return (
     <footer className="bg-brand-700 text-white">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2">
         <div>
           <div className="flex items-center gap-2 text-lg font-bold">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15">
@@ -17,16 +17,7 @@ export function Footer() {
           </p>
         </div>
 
-        <div>
-          <h3 className="mb-3 font-semibold">Tautan</h3>
-          <ul className="space-y-2 text-sm text-white/75">
-            <li><a href="/#layanan" className="hover:text-white">Layanan</a></li>
-            <li><a href="/#tarif" className="hover:text-white">Tarif</a></li>
-            <li><a href="/cek-status" className="hover:text-white">Cek Status</a></li>
-          </ul>
-        </div>
-
-        <div>
+        <div className="md:justify-self-end">
           <h3 className="mb-3 font-semibold">Kontak</h3>
           <ul className="space-y-2 text-sm text-white/75">
             <li className="flex items-center gap-2"><MapPin size={16} /> Semarang, Jawa Tengah</li>
@@ -35,7 +26,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="relative top-2 border-t border-white/15 px-4 pb-24 pt-4 text-center text-xs text-white/60 sm:pb-28">
+      <div className="border-t border-white/15 px-4 pb-2 pt-6 text-center text-xs text-white/60">
         © 2026 Cuci.in. Sistem Informasi Layanan Laundry.
       </div>
     </footer>

@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { statusTestOrders } from "@/lib/mock-data/status-orders";
 import { getOrderByCode } from "@/lib/services/orders";
 import { formatRupiah } from "@/lib/utils/format";
 import type { OrderStatus, OrderTracking } from "@/types";
@@ -83,28 +82,6 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
           {state === "loading" ? "Mencari..." : "Cek Status"}
         </Button>
       </form>
-
-      <details className="mt-5 rounded-xl border border-brand-300/40 bg-white px-4 py-3 text-sm">
-        <summary className="cursor-pointer font-semibold text-brand-700">
-          Kode contoh untuk uji coba (10 pesanan)
-        </summary>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          {statusTestOrders.map((testOrder) => (
-            <button
-              key={testOrder.code}
-              type="button"
-              onClick={() => {
-                setCode(testOrder.code);
-                setFieldError("");
-              }}
-              className="flex items-center justify-between gap-3 rounded-lg border border-soft px-3 py-2 text-left hover:border-brand-300 hover:bg-soft/30"
-            >
-              <span className="font-mono font-bold text-brand-700">{testOrder.code}</span>
-              <span className="truncate text-xs text-muted">{statusLabel[testOrder.status]}</span>
-            </button>
-          ))}
-        </div>
-      </details>
 
       <div className="mt-6" aria-live="polite">
         {state === "loading" && (
