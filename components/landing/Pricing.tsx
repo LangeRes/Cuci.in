@@ -39,11 +39,11 @@ export function Pricing() {
             </Card>
           ))}
         </div>
-        <div className="mt-14">
+        <div id="cuci-satuan" className="mt-14 scroll-mt-24">
           <SectionHeading
-            eyebrow="Cuci Satuan Interaktif"
-            title="Koleksi Layanan Cuci Satuan Premium"
-            subtitle="Pakaian digantung menyamping pada rail. Arahkan kursor atau sentuh untuk melihat pakaian menghadap ke Anda, dan klik untuk melihat detail serta tampak belakang."
+            eyebrow="Cuci Satuan"
+            title="Harga layanan cuci satuan"
+            subtitle="Berikut harga untuk setiap item yang ingin dicuci."
           />
           <ProductRailGallery />
         </div>

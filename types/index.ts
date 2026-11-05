@@ -30,6 +30,8 @@ export interface OperatingHour {
 export interface OrderTracking {
   code: string;
   customerName: string;
+  phone?: string;
+  pickupAddress?: string;
   serviceName: string;
   status: OrderStatus;
   paymentStatus: PaymentStatus;

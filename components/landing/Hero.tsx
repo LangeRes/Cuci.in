@@ -3,22 +3,22 @@ import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, Clock, Truck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
-const HERO_LAUNDRY_IMAGE = "https://images.unsplash.com/photo-1776356829215-37929a717f0d?auto=format&fit=crop&w=2000&q=90";
+const HERO_LAUNDRY_IMAGE = "https://images.unsplash.com/photo-1776356829215-37929a717f0d?auto=format&fit=crop&w=1600&q=82";
 
-export function Hero() {
+export function Hero({ className = "" }: { className?: string } = {}) {
   return (
-    <section className="overflow-hidden bg-gradient-to-br from-[#e7f1f4] via-[#f5f9fc] to-[#eef4f1]">
+    <section className={`overflow-hidden bg-gradient-to-br from-[#e7f1f4] via-[#f5f9fc] to-[#eef4f1] ${className}`}>
       <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-14 md:grid-cols-[0.9fr_1.1fr] md:gap-8 md:py-20 lg:gap-12">
         <div className="relative z-10">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-300/50 bg-white/80 px-4 py-1.5 text-xs font-semibold text-brand-700 shadow-sm backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.12)]" />
-            Laundry online praktis
+            Jemput & antar dari rumah
           </span>
           <h1 className="mt-5 text-[2.6rem] font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">
-            Cucian bersih,<br /><span className="text-brand-600">tanpa ribet.</span>
+            Cucian bersih,<br /><span className="text-brand-600">tanpa repot.</span>
           </h1>
           <p className="mt-5 max-w-lg text-base leading-relaxed text-muted sm:text-lg">
-            Kami jemput, rawat, dan antar kembali cucianmu dengan rapi. Kamu tinggal pilih layanan dan waktu yang paling nyaman.
+            Pakaian dijemput dari rumah, dicuci dengan teliti, lalu diantar kembali dalam keadaan bersih dan siap dipakai.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href="/pesan">Pesan Sekarang <ArrowUpRight size={16} /></Button>

@@ -1556,7 +1556,7 @@ export function ProductRailGallery({
       <ClothingRailHero
         items={displayItems}
         hanger="wood"
-        eyebrow="Gantungan Cuci Satuan Interaktif"
+        eyebrow="Cuci Satuan"
         heading="Pilih & Periksa Pakaian Dari Berbagai Sisi"
         caption="Pakaian tergantung menyamping di atas rail. Gerakkan kursor atau geser rail untuk memutarnya ke depan. Klik untuk membuka inspeksi 3D bolak-balik & info detail pengerjaan."
         autoplay={autoplay}
@@ -1569,10 +1569,10 @@ export function ProductRailGallery({
         }}
         action={
           <a
-            href="/pesan?layanan=svc-3"
+            href="/pesan-satuan"
             className="inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-brand-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 hover:-translate-y-0.5"
           >
-            Pesan Layanan Cuci Satuan Ini
+            Pesan Layanan Cuci Satuan
           </a>
         }
       />
