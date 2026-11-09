@@ -1,40 +1,4 @@
-// DATA DUMMY untuk Landing Page. Pisah dari komponen supaya mudah diganti data Supabase.
-import type { LaundryService, OperatingHour } from "@/types";
-
-export const services: LaundryService[] = [
-  {
-    id: "svc-1",
-    name: "Cuci Kering",
-    description: "Cuci bersih dan dikeringkan, siap disetrika sendiri.",
-    pricePerKg: 5000,
-    estimateDays: 2,
-    icon: "wash",
-  },
-  {
-    id: "svc-2",
-    name: "Setrika Saja",
-    description: "Pakaian bersih Anda dirapikan dengan setrika uap.",
-    pricePerKg: 4000,
-    estimateDays: 1,
-    icon: "iron",
-  },
-  {
-    id: "svc-3",
-    name: "Cuci + Setrika",
-    description: "Paket lengkap: dicuci, dikeringkan, disetrika, dan dilipat.",
-    pricePerKg: 7000,
-    estimateDays: 3,
-    icon: "full",
-  },
-  {
-    id: "svc-4",
-    name: "Kilat (Express)",
-    description: "Layanan prioritas, selesai di hari yang sama.",
-    pricePerKg: 12000,
-    estimateDays: 1,
-    icon: "express",
-  },
-];
+import type { OperatingHour } from "@/types";
 
 export const operatingHours: OperatingHour[] = [
   { day: "Senin - Jumat", open: "07.00", close: "20.00" },
@@ -48,4 +12,3 @@ export const orderSteps = [
   { title: "Pantau Status", desc: "Lihat progres cucian dari dashboard." },
   { title: "Bayar & Ambil", desc: "Lunasi tagihan, lalu ambil cucian Anda." },
 ];
-

@@ -33,7 +33,6 @@ export function Hero({ className = "" }: { className?: string } = {}) {
 
         <Link
           href="/pesan"
-          aria-label="Lihat layanan laundry dan mulai memesan"
           className="group relative block min-w-0 overflow-hidden rounded-[2rem] border border-white/80 bg-brand-700 shadow-[0_30px_80px_-32px_rgba(31,58,68,0.42)] outline-none ring-offset-4 transition-shadow duration-500 hover:shadow-[0_36px_90px_-30px_rgba(31,58,68,0.5)] focus-visible:ring-2 focus-visible:ring-brand-600"
         >
           <div className="relative aspect-[1.12/1] min-h-[340px] w-full sm:aspect-[1.35/1] md:min-h-[410px]">

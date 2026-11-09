@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { HTMLAttributes } from "react";
+import { Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 export interface CarouselItem {
@@ -31,11 +32,15 @@ export function CalendlyCarousel({
   ...props
 }: CalendlyCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pauseControlRef = useRef<HTMLButtonElement>(null);
   const touchStartX = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [width, setWidth] = useState(1000);
   const [progress, setProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const total = items.length;
 
   useEffect(() => {
@@ -47,8 +52,16 @@ export function CalendlyCarousel({
   }, []);
 
   useEffect(() => {
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => setPrefersReducedMotion(motionPreference.matches);
+    updateMotionPreference();
+    motionPreference.addEventListener("change", updateMotionPreference);
+    return () => motionPreference.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  useEffect(() => {
     setProgress(0);
-    if (!total || (pauseOnHover && isHovered)) return;
+    if (!total || isPaused || isFocused || prefersReducedMotion || (pauseOnHover && isHovered)) return;
     const startedAt = Date.now();
     const timer = window.setInterval(() => {
       const elapsed = Date.now() - startedAt;
@@ -59,7 +72,7 @@ export function CalendlyCarousel({
       }
     }, 50);
     return () => window.clearInterval(timer);
-  }, [activeIndex, autoPlayInterval, isHovered, pauseOnHover, total]);
+  }, [activeIndex, autoPlayInterval, isFocused, isHovered, isPaused, pauseOnHover, prefersReducedMotion, total]);
 
   const move = useCallback((step: number) => {
     setProgress(0);
@@ -87,6 +100,15 @@ export function CalendlyCarousel({
       onKeyDown={(event) => {
         if (event.key === "ArrowLeft") move(-1);
         if (event.key === "ArrowRight") move(1);
+      }}
+      onFocus={(event) => {
+        if (!pauseControlRef.current?.contains(event.target as Node)) setIsFocused(true);
+      }}
+      onBlur={(event) => {
+        const nextTarget = event.relatedTarget;
+        if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget) || pauseControlRef.current?.contains(nextTarget)) {
+          setIsFocused(false);
+        }
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -178,6 +200,20 @@ export function CalendlyCarousel({
         ))}
       </div>
       <p className="mt-2 text-xs text-muted">Pilih titik, klik kartu samping, atau geser untuk melihat ulasan lain.</p>
+      {prefersReducedMotion ? (
+        <p className="mt-3 text-xs text-muted">Putar otomatis nonaktif mengikuti preferensi gerakan perangkat.</p>
+      ) : (
+        <button
+          ref={pauseControlRef}
+          type="button"
+          aria-pressed={isPaused}
+          onClick={() => setIsPaused((paused) => !paused)}
+          className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-full border border-brand-600 px-4 py-2 text-sm font-semibold text-brand-700 transition-colors hover:bg-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+        >
+          {isPaused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+          {isPaused ? "Lanjutkan putar otomatis" : "Jeda putar otomatis"}
+        </button>
+      )}
     </div>
   );
 }

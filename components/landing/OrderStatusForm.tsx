@@ -6,9 +6,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { statusTestOrders } from "@/lib/mock-data/status-orders";
 import { getOrderByCode } from "@/lib/services/orders";
-import { formatRupiah } from "@/lib/utils/format";
+import { isValidOrderCode } from "@/lib/utils/order-code";
 import type { OrderStatus, OrderTracking } from "@/types";
 
 const statusLabel: Record<OrderStatus, string> = {
@@ -38,8 +37,8 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
       setFieldError("Kode pesanan wajib diisi.");
       return;
     }
-    if (!/^LDR-\d{4}$/i.test(value)) {
-      setFieldError("Format kode tidak valid. Gunakan format LDR-1234.");
+    if (!isValidOrderCode(value)) {
+      setFieldError("Format kode tidak valid. Periksa kode pesanan yang Anda terima.");
       return;
     }
 
@@ -67,7 +66,7 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="Masukkan kode pesanan"
+            placeholder="Contoh: LDR-7K3M-9Q2R"
             aria-label="Kode pesanan"
             aria-invalid={!!fieldError}
             className="w-full rounded-xl border border-brand-300 bg-white px-4 py-3 text-sm text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30"
@@ -83,28 +82,6 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
           {state === "loading" ? "Mencari..." : "Cek Status"}
         </Button>
       </form>
-
-      <details className="mt-5 rounded-xl border border-brand-300/40 bg-white px-4 py-3 text-sm">
-        <summary className="cursor-pointer font-semibold text-brand-700">
-          Kode contoh untuk uji coba (10 pesanan)
-        </summary>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          {statusTestOrders.map((testOrder) => (
-            <button
-              key={testOrder.code}
-              type="button"
-              onClick={() => {
-                setCode(testOrder.code);
-                setFieldError("");
-              }}
-              className="flex items-center justify-between gap-3 rounded-lg border border-soft px-3 py-2 text-left hover:border-brand-300 hover:bg-soft/30"
-            >
-              <span className="font-mono font-bold text-brand-700">{testOrder.code}</span>
-              <span className="truncate text-xs text-muted">{statusLabel[testOrder.status]}</span>
-            </button>
-          ))}
-        </div>
-      </details>
 
       <div className="mt-6" aria-live="polite">
         {state === "loading" && (
@@ -138,15 +115,8 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
               </Badge>
             </div>
             <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-              <div><dt className="text-muted">Pelanggan</dt><dd className="font-medium text-ink">{order.customerName}</dd></div>
               <div><dt className="text-muted">Layanan</dt><dd className="font-medium text-ink">{order.serviceName}</dd></div>
-              <div><dt className="text-muted">Berat</dt><dd className="font-medium text-ink">{order.weightKg > 0 ? `${order.weightKg} kg` : "Belum ditimbang"}</dd></div>
-              <div><dt className="text-muted">Total</dt><dd className="font-medium text-ink">{order.total > 0 ? formatRupiah(order.total) : "-"}</dd></div>
               <div><dt className="text-muted">Estimasi selesai</dt><dd className="font-medium text-ink">{order.estimatedDone}</dd></div>
-              <div>
-                <dt className="text-muted">Pembayaran</dt>
-                <dd><Badge tone={order.paymentStatus === "lunas" ? "success" : "warning"}>{order.paymentStatus === "lunas" ? "Lunas" : "Belum bayar"}</Badge></dd>
-              </div>
             </dl>
           </Card>
         )}

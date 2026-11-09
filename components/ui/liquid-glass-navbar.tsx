@@ -528,7 +528,7 @@ export function LiquidNavbar({
       data-gl={gl}
       data-compact={compact === undefined ? undefined : String(compact)}
       data-refract={refract ? "on" : "off"}
-      aria-label="Main"
+      aria-label="Navigasi utama"
       onKeyDown={onKeyDown}
       onPointerMove={onMove}
       onPointerLeave={() => { st.current.mouse.on = false; loop() }}
