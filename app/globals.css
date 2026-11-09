@@ -4,11 +4,11 @@
   --color-page: #f5f9fc;
   --color-soft: #dbeaf0;
   --color-brand-300: #7ab2b2;
-  --color-brand-500: #4d869c;
-  --color-brand-600: #3f7487;
-  --color-brand-700: #335f6f;
+  --color-brand-500: #3a6e80;
+  --color-brand-600: #335f6f;
+  --color-brand-700: #294b58;
   --color-ink: #1f3a44;
-  --color-muted: #5b7680;
+  --color-muted: #4c6670;
   --color-background: #ffffff;
   --color-foreground: #1f3a44;
   --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -21,19 +21,19 @@
   --card-foreground: #1f3a44;
   --popover: #ffffff;
   --popover-foreground: #1f3a44;
-  --primary: #4d869c;
+  --primary: #3a6e80;
   --primary-foreground: #ffffff;
   --secondary: #dbeaf0;
   --secondary-foreground: #335f6f;
   --muted: #f0f6f9;
-  --muted-foreground: #5b7680;
+  --muted-foreground: #4c6670;
   --accent: #eef7ff;
   --accent-foreground: #1f3a44;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #dbeaf0;
   --input: #dbeaf0;
-  --ring: #4d869c;
+  --ring: #3a6e80;
   --radius: 0.75rem;
 }
 

@@ -26,7 +26,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/15 px-4 pb-2 pt-6 text-center text-xs text-white/60">
+      <div className="border-t border-white/15 px-4 pb-2 pt-6 text-center text-xs text-white/80">
         © 2026 Cuci.in. Sistem Informasi Layanan Laundry.
       </div>
     </footer>

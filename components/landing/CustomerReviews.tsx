@@ -68,7 +68,7 @@ export function CustomerReviews() {
           title="Laundry lebih ringan, hari lebih lega"
           subtitle="Pengalaman yang bikin urusan cucian terasa lebih sederhana."
         />
-        <CalendlyCarousel items={customerStories} autoPlayInterval={6500} pauseOnHover={false} className="mx-auto max-w-[1080px]" />
+        <CalendlyCarousel items={customerStories} autoPlayInterval={6500} className="mx-auto max-w-[1080px]" />
       </div>
     </section>
   );

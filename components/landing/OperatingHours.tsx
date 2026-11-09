@@ -14,7 +14,7 @@ export function OperatingHours() {
               <span className="flex items-center gap-2 font-medium text-ink">
                 <Clock size={16} className="text-brand-500" /> {h.day}
               </span>
-              <span className={h.closed ? "font-semibold text-red-500" : "text-muted"}>
+              <span className={h.closed ? "font-semibold text-red-700" : "text-muted"}>
                 {h.closed ? "Tutup" : `${h.open} - ${h.close} WIB`}
               </span>
             </div>

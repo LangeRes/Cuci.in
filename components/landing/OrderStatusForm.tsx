@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getOrderByCode } from "@/lib/services/orders";
-import { formatRupiah } from "@/lib/utils/format";
+import { isValidOrderCode } from "@/lib/utils/order-code";
 import type { OrderStatus, OrderTracking } from "@/types";
 
 const statusLabel: Record<OrderStatus, string> = {
@@ -37,8 +37,8 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
       setFieldError("Kode pesanan wajib diisi.");
       return;
     }
-    if (!/^LDR-\d{4}$/i.test(value)) {
-      setFieldError("Format kode tidak valid. Gunakan format LDR-1234.");
+    if (!isValidOrderCode(value)) {
+      setFieldError("Format kode tidak valid. Periksa kode pesanan yang Anda terima.");
       return;
     }
 
@@ -66,7 +66,7 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="Masukkan kode pesanan"
+            placeholder="Contoh: LDR-7K3M-9Q2R"
             aria-label="Kode pesanan"
             aria-invalid={!!fieldError}
             className="w-full rounded-xl border border-brand-300 bg-white px-4 py-3 text-sm text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30"
@@ -115,15 +115,8 @@ export function OrderStatusForm({ initialCode = "" }: { initialCode?: string }) 
               </Badge>
             </div>
             <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-              <div><dt className="text-muted">Pelanggan</dt><dd className="font-medium text-ink">{order.customerName}</dd></div>
               <div><dt className="text-muted">Layanan</dt><dd className="font-medium text-ink">{order.serviceName}</dd></div>
-              <div><dt className="text-muted">Berat</dt><dd className="font-medium text-ink">{order.weightKg > 0 ? `${order.weightKg} kg` : "Belum ditimbang"}</dd></div>
-              <div><dt className="text-muted">Total</dt><dd className="font-medium text-ink">{order.total > 0 ? formatRupiah(order.total) : "-"}</dd></div>
               <div><dt className="text-muted">Estimasi selesai</dt><dd className="font-medium text-ink">{order.estimatedDone}</dd></div>
-              <div>
-                <dt className="text-muted">Pembayaran</dt>
-                <dd><Badge tone={order.paymentStatus === "lunas" ? "success" : "warning"}>{order.paymentStatus === "lunas" ? "Lunas" : "Belum bayar"}</Badge></dd>
-              </div>
             </dl>
           </Card>
         )}
