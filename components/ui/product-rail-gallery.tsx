@@ -1543,13 +1543,11 @@ export function ProductRailGallery({
   autoplay = true,
   interval = 3200,
 }: {
-  items?: RailGarment[] | any[];
+  items?: RailGarment[];
   autoplay?: boolean;
   interval?: number;
 }) {
-  const displayItems = (items && items.length > 0 && 'image' in items[0] && items[0].sideImage)
-    ? (items as RailGarment[])
-    : CUCI_SATUAN_ITEMS;
+  const displayItems = items && items.length > 0 ? items : CUCI_SATUAN_ITEMS;
 
   return (
     <div className="w-full my-12 rounded-3xl border border-brand-300/30 bg-white/70 backdrop-blur-md p-6 sm:p-10 shadow-xl shadow-brand-500/5">

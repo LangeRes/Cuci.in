@@ -1,6 +1,3 @@
-// Tipe data SEMENTARA untuk frontend.
-// Nanti sesuaikan dengan database.types.ts dari Anggota 1/2.
-
 export type OrderStatus =
   | "menunggu"
   | "diterima"
@@ -13,11 +10,19 @@ export type PaymentStatus = "belum_bayar" | "lunas";
 
 export interface LaundryService {
   id: string;
+  slug?: string | null;
   name: string;
-  description: string;
+  description: string | null;
   pricePerKg: number;
   estimateDays: number;
   icon: "wash" | "iron" | "full" | "express";
+}
+
+export interface LaundryItem {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
 }
 
 export interface OperatingHour {
@@ -29,13 +34,13 @@ export interface OperatingHour {
 
 export interface OrderTracking {
   code: string;
-  customerName: string;
+  customerName?: string;
   phone?: string;
   pickupAddress?: string;
   serviceName: string;
   status: OrderStatus;
-  paymentStatus: PaymentStatus;
-  weightKg: number;
-  total: number;
+  paymentStatus?: PaymentStatus;
+  weightKg?: number | null;
+  total?: number | null;
   estimatedDone: string;
 }

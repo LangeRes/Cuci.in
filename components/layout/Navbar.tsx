@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { BadgeDollarSign, BookOpen, Clock3, House, PackageSearch, Shirt, ShoppingBag, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { BadgeDollarSign, BookOpen, Clock3, House, MoreHorizontal, PackageSearch, Shirt, ShoppingBag, Sparkles, X } from "lucide-react";
 import { LiquidNavbar, type LiquidNavItem } from "@/components/ui/liquid-glass-navbar";
 
 const navItems: LiquidNavItem[] = [
@@ -17,12 +17,42 @@ const navItems: LiquidNavItem[] = [
   { label: "Pesan", href: "/pesan", icon: <ShoppingBag size={18} strokeWidth={1.8} />, fx: "pop" },
 ];
 
+const mobileNavItems = [navItems[0], navItems[1], navItems[2], navItems[7]];
+const mobileMoreItems = [navItems[3], navItems[4], navItems[5], navItems[6]];
+
 export function Navbar() {
   const pathname = usePathname();
   const routeActive = pathname === "/pesan-satuan" ? 3 : pathname === "/pesan" ? 7 : pathname === "/cek-status" ? 6 : 0;
+  const headerRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(routeActive);
+  const [isPastHeader, setIsPastHeader] = useState(pathname !== "/");
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const isNavbarVisible = isPastHeader && !isFooterVisible;
 
   useEffect(() => {
+    const header = headerRef.current;
+    const footer = document.querySelector("footer");
+    setIsPastHeader(pathname !== "/");
+    setIsFooterVisible(false);
+
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === header) {
+          setIsPastHeader(!entry.isIntersecting);
+        } else if (entry.target === footer) {
+          setIsFooterVisible(entry.isIntersecting);
+        }
+      }
+    });
+    if (pathname === "/" && header) observer.observe(header);
+    if (footer) observer.observe(footer);
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  useEffect(() => {
+    setIsMoreOpen(false);
     const anchorIndex: Record<string, number> = {
       "#layanan": 1,
       "#tarif": 2,
@@ -81,7 +111,7 @@ export function Navbar() {
 
   return (
     <>
-    <header className="border-b border-soft bg-white/75 backdrop-blur-md">
+    <header ref={headerRef} className="border-b border-soft bg-white/75 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="group flex items-center gap-3 text-brand-700">
           <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-700/20 ring-4 ring-brand-500/10 transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105">
@@ -103,8 +133,96 @@ export function Navbar() {
         </div>
       </div>
     </header>
-    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-3 sm:bottom-6 sm:px-6">
-      <LiquidNavbar items={navItems} active={active} onChange={(index) => setActive(index)} className="pointer-events-auto mx-auto" />
+    <div className="pointer-events-none fixed inset-x-0 bottom-12 z-50 flex justify-center px-3 sm:bottom-14 sm:px-6">
+      <div
+        aria-hidden={!isNavbarVisible}
+        className={`w-full transition-[opacity,transform,visibility] duration-500 ease-out motion-reduce:transition-none ${
+          isNavbarVisible
+            ? "visible translate-y-0 opacity-100"
+            : "invisible translate-y-8 opacity-0"
+        }`}
+      >
+        <div className="hidden min-[1025px]:flex min-[1025px]:justify-center">
+          <LiquidNavbar
+            items={navItems}
+            active={active}
+            onChange={(index) => setActive(index)}
+            compact={false}
+            className={`pointer-events-auto mx-auto ${isNavbarVisible ? "" : "pointer-events-none"}`}
+          />
+        </div>
+        <nav
+          aria-label="Navigasi utama"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setIsMoreOpen(false);
+          }}
+          className={`relative mx-auto w-full max-w-[26rem] rounded-2xl border border-white/80 bg-white/95 p-2 shadow-lg backdrop-blur-md min-[1025px]:hidden ${
+            isNavbarVisible ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+        >
+          <div className="grid grid-cols-5 gap-1">
+            {mobileNavItems.map((item) => {
+              const index = navItems.indexOf(item);
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  aria-current={active === index ? "page" : undefined}
+                  onClick={() => setActive(index)}
+                  className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 ${
+                    active === index ? "bg-brand-500/10 text-brand-700" : "text-muted hover:bg-soft/60 hover:text-brand-700"
+                  }`}
+                >
+                  <span aria-hidden="true">{item.icon}</span>
+                  <span className="max-w-full truncate">{item.label}</span>
+                </a>
+              );
+            })}
+            <button
+              type="button"
+              aria-expanded={isMoreOpen}
+              aria-controls="mobile-nav-more"
+              aria-label={isMoreOpen ? "Tutup menu lainnya" : "Buka menu lainnya"}
+              onClick={() => setIsMoreOpen((open) => !open)}
+              className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 ${
+                isMoreOpen || mobileMoreItems.some((item) => navItems.indexOf(item) === active)
+                  ? "bg-brand-500/10 text-brand-700"
+                  : "text-muted hover:bg-soft/60 hover:text-brand-700"
+              }`}
+            >
+              {isMoreOpen ? <X size={18} aria-hidden="true" /> : <MoreHorizontal size={18} aria-hidden="true" />}
+              <span>Lainnya</span>
+            </button>
+          </div>
+          <div
+            id="mobile-nav-more"
+            className={`absolute bottom-full right-2 mb-2 w-56 gap-1 rounded-2xl border border-soft bg-white p-2 shadow-xl ${
+              isMoreOpen ? "grid" : "hidden"
+            }`}
+          >
+            {mobileMoreItems.map((item) => {
+              const index = navItems.indexOf(item);
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  aria-current={active === index ? "page" : undefined}
+                  onClick={() => {
+                    setActive(index);
+                    setIsMoreOpen(false);
+                  }}
+                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 ${
+                    active === index ? "bg-brand-500/10 text-brand-700" : "text-muted hover:bg-soft/60 hover:text-brand-700"
+                  }`}
+                >
+                  <span aria-hidden="true">{item.icon}</span>
+                  <span>{item.label}</span>
+                </a>
+              );
+            })}
+          </div>
+        </nav>
+      </div>
     </div>
     </>
   );
